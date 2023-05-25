@@ -4,7 +4,7 @@ This is a plugin that enhanced regex preview in Obsidian,like dynamic highlights
 
 By default, the plugin will use the same regex as the dynamic highlights plugin, but you can customize it in the settings(NOT YET).
 
-![img.png](img.png)
+![img.png](media/img.png)
 
 ## Features
 
