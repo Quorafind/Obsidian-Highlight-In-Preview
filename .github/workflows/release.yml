@@ -5,7 +5,9 @@ on:
         types: [ created ]
 
 env:
-    PLUGIN_NAME: obsidian-canvas-presentation
+    PLUGIN_NAME: obsidian-highlight-in-preview
+
+permissions: write-all
 
 jobs:
     build:
