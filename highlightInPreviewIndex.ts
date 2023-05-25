@@ -7,7 +7,7 @@ interface highlighter {
 	regex: boolean,
 }
 
-export default class TimestampPlugin extends Plugin {
+export default class HighlightInPreviewPlugin extends Plugin {
 	highlighters: highlighter[] = [];
 
 	async onload() {
