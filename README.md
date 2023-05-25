@@ -1,96 +1,860 @@
-# Obsidian Sample Plugin
+# Hightlight In Preview
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+This is a plugin that enhanced regex preview in Obsidian,like dynamic highlights did but in Preview mode.
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+By default, the plugin will use the same regex as the dynamic highlights plugin, but you can customize it in the settings(NOT YET).
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+![img.png](img.png)
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+## Features
 
-## First time developing plugins?
+- Default Feature: Support Timestamp Highlight, like HH:mm or HH:mm:ss. It will add classes to the timestamp text, so you can customize the style in your css file.
+- REGEX Feature: You need to install dynamic highlights plugin first, and then you can use the regex in the settings to highlight the text you want.
 
-Quick starting guide for new plugin devs:
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+## Usage
 
-## Releasing new releases
+1. Install the plugin
+2. Enable the plugin in the settings
+3. Add css style in your css file, like this:
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+<details>
+```css
+/* @settings
+name: Time Color
+id: time
+settings:
+    - 
+        title: Time Color
+        description: Change the color of the time mark
+        id: time-color		
+        type: variable-themed-color
+        format: hex
+        default-dark: '#E45858'
+        default-light: '#E45858'
+    - 
+        title: Time Font Color
+        description: Change the  color of the time font mark
+        id: time-font-color		
+        type: variable-themed-color
+        format: hex
+        default-dark: '#FFFBF0'
+        default-light: '#FFFBF0'
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+*/
 
-## Adding your plugin to the community plugin list
+.theme-light, .theme-dark {
+--time-color: #E45858;
+/* --time-dark-color: #2b9183; */
+--time-font-color: #FFFBF0;
+}
 
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+.time {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
 
-## How to use
+.time::before {
+content: "🕒";
+background-color: "";
+}
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
+.theme-light .light-time-1 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
 
-## Manually installing the plugin
+.theme-light .light-time-1::before {
+content: "🕐";
+background-color: "";
+}
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+.theme-light .light-time-1-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+.theme-light .light-time-1-5::before {
+content: "🕜";
+background-color: "";
+}
 
-## Funding URL
+.theme-light .light-time-2 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
 
-You can include funding URLs where people who use your plugin can financially support it.
+.theme-light .light-time-2::before {
+content: "🕑";
+background-color: "";
+}
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+.theme-light .light-time-2-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
 
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
+.theme-light .light-time-2-5::before {
+content: "🕝";
+background-color: "";
+}
+
+.theme-light .light-time-3 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-3::before {
+content: "🕒";
+background-color: "";
+}
+
+
+.theme-light .light-time-3-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-3-5::before {
+content: "🕞";
+background-color: "";
+}
+
+.theme-light .light-time-4 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-4::before {
+content: "🕓";
+background-color: "";
+}
+
+.theme-light .light-time-4-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-4-5::before {
+content: "🕟";
+background-color: "";
+}
+
+.theme-light .light-time-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-5::before {
+content: "🕔";
+background-color: "";
+}
+
+.theme-light .light-time-5-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-5-5::before {
+content: "🕠";
+background-color: "";
+}
+
+.theme-light .light-time-6 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-6::before {
+content: "🕕";
+background-color: "";
+}
+
+.theme-light .light-time-6-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-6-5::before {
+content: "🕡";
+background-color: "";
+}
+
+.theme-light .light-time-7 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-7::before {
+content: "🕖";
+background-color: "";
+}
+
+.theme-light .light-time-7-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-7-5::before {
+content: "🕢";
+background-color: "";
+}
+
+.theme-light .light-time-8 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-8::before {
+content: "🕗";
+background-color: "";
+}
+
+.theme-light .light-time-8-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-8-5::before {
+content: "🕣";
+background-color: "";
+}
+
+.theme-light .light-time-9 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-9::before {
+content: "🕘";
+background-color: "";
+}
+
+.theme-light .light-time-9-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-9-5::before {
+content: "🕤";
+background-color: "";
+}
+
+.theme-light .light-time-10 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-10::before {
+content: "🕙";
+background-color: "";
+}
+
+.theme-light .light-time-10-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-10-5::before {
+content: "🕥";
+background-color: "";
+}
+
+.theme-light .light-time-11 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-11::before {
+content: "🕚";
+background-color: "";
+}
+
+.theme-light .light-time-11-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-11-5::before {
+content: "🕦";
+background-color: "";
+}
+
+.theme-light .light-time-12 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-12::before {
+content: "🕛";
+background-color: "";
+}
+
+.theme-light .light-time-12-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-light .light-time-12-5::before {
+content: "🕧";
+background-color: "";
+}
+
+.theme-dark .light-time-1 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-1::before {
+content: "🕐";
+background-color: "";
+}
+
+.theme-dark .light-time-1-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-1-5::before {
+content: "🕜";
+background-color: "";
+}
+
+.theme-dark .light-time-2 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-2::before {
+content: "🕑";
+background-color: "";
+}
+
+.theme-dark .light-time-2-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-2-5::before {
+content: "🕝";
+background-color: "";
+}
+
+.theme-dark .light-time-3 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-3::before {
+content: "🕒";
+background-color: "";
+}
+
+
+.theme-dark .light-time-3-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-3-5::before {
+content: "🕞";
+background-color: "";
+}
+
+.theme-dark .light-time-4 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-4::before {
+content: "🕓";
+background-color: "";
+}
+
+.theme-dark .light-time-4-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-4-5::before {
+content: "🕟";
+background-color: "";
+}
+
+.theme-dark .light-time-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-5::before {
+content: "🕔";
+background-color: "";
+}
+
+.theme-dark .light-time-5-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-5-5::before {
+content: "🕠";
+background-color: "";
+}
+
+.theme-dark .light-time-6 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-6::before {
+content: "🕕";
+background-color: "";
+}
+
+.theme-dark .light-time-6-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-6-5::before {
+content: "🕡";
+background-color: "";
+}
+
+.theme-dark .light-time-7 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-7::before {
+content: "🕖";
+background-color: "";
+}
+
+.theme-dark .light-time-7-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-7-5::before {
+content: "🕢";
+background-color: "";
+}
+
+.theme-dark .light-time-8 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-8::before {
+content: "🕗";
+background-color: "";
+}
+
+.theme-dark .light-time-8-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-8-5::before {
+content: "🕣";
+background-color: "";
+}
+
+.theme-dark .light-time-9 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-9::before {
+content: "🕘";
+background-color: "";
+}
+
+.theme-dark .light-time-9-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-9-5::before {
+content: "🕤";
+background-color: "";
+}
+
+.theme-dark .light-time-10 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-10::before {
+content: "🕙";
+background-color: "";
+}
+
+.theme-dark .light-time-10-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-10-5::before {
+content: "🕥";
+background-color: "";
+}
+
+.theme-dark .light-time-11 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-11::before {
+content: "🕚";
+background-color: "";
+}
+
+.theme-dark .light-time-11-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-11-5::before {
+content: "🕦";
+background-color: "";
+}
+
+.theme-dark .light-time-12 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-12::before {
+content: "🕛";
+background-color: "";
+}
+
+.theme-dark .light-time-12-5 {
+color: var(--time-font-color) ; /*象牙白*/
+background-color: var(--time-color); /* 铜绿 #40bfaf;*/
+font-style:normal;
+padding-top: 0px;
+padding-bottom: 2px;
+padding-right: 4px;
+padding-left: 1px;
+border-radius: 5px;
+}
+
+.theme-dark .light-time-12-5::before {
+content: "🕧";
+background-color: "";
 }
 ```
+</details>
 
-If you have multiple URLs, you can also do:
+## Installation
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+- Not ready for market yet
+- Can be installed via the [Brat](https://github.com/TfTHacker/obsidian42-brat) plugin
+- Manual installation
 
-## API Documentation
+1. Find the release page on this github page and click
+2. Download the latest release zip file
+3. Unzip it, copy the unzipped folder to the obsidian plugin folder, make sure there are main.js and manifest.json files
+   in the folder
+4. Restart obsidian (do not restart also, you have to refresh plugin list), in the settings interface to enable the
+   plugin
+5. Done!
 
-See https://github.com/obsidianmd/obsidian-api
+## Support
+
+If you are enjoying this plugin then please support my work and enthusiasm by buying me a coffee
+on [https://www.buymeacoffee.com/boninall](https://www.buymeacoffee.com/boninall).
+.
+
+<a href="https://www.buymeacoffee.com/boninall"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=boninall&button_colour=6495ED&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"></a>
